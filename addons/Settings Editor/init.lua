@@ -3,7 +3,6 @@
 
 local core_mainmenu                    = require("core_mainmenu")
 local lib_helpers                      = require("solylib.helpers")
-local lib_theme_loaded, lib_theme      = pcall(require, "Theme Editor.theme")
 local optionsLoaded, options           = pcall(require, "Settings Editor.options")
 local addonName                        = "Settings Editor"
 local addonHome                        = "addons/" .. addonName .. "/"
@@ -37,6 +36,15 @@ local _SettingsEditorDefaults = {
     {"fontScale", 1.0},
 }
 
+-- Return value if nil, otherwise a default value
+local function NotNilOrDefault(value, default)
+    if value == nil then
+        return default
+    else
+        return value
+    end
+end
+
 -- Return value restricted to the range
 local function RestrictOptionsRange(val, min, max)
     if val < min then
@@ -61,7 +69,7 @@ local function SaveTableToFile(tbl, fileName)
         io.write("{\n")
         for key, val in pairs(tbl) do
             local skey
-            local ktype = type(key)			
+            local ktype = type(key)
             local sval
             local vtype = type(val)
             
@@ -69,19 +77,19 @@ local function SaveTableToFile(tbl, fileName)
             -- options table isn't nested (yet).
             if     vtype == "string"  then sval = string.format("%q", val)
             elseif vtype == "number"  then sval = string.format("%s", val)
-            elseif vtype == "boolean" then sval = tostring(val) 
+            elseif vtype == "boolean" then sval = tostring(val)
             end
             
             io.write(string.format("\t%s = %s,\n", key, sval))
         end
         io.write("}\n")
         io.close(file)
-    end		
+    end
 end
 
 local function SaveOptions(tbl, fileName)
     --print(addonName, "Saving Options")
-    SaveTableToFile(tbl, fileName)	
+    SaveTableToFile(tbl, fileName)
 end
 
 local function SaveThisAddonsOptions()
@@ -109,7 +117,7 @@ local function CheckFileExtension(file, ext)
     return GetFileExtension(file) == ext
 end
 
--- Load the font list. Supports only ttf for now because otf files 
+-- Load the font list. Supports only ttf for now because otf files
 -- don't work in imgui
 local function LoadFontList()
     customFontList = {}
@@ -162,7 +170,7 @@ local function PresentGlobalSettings()
         success, selectedFont = imgui.Combo("Font", selectedFont, customFontList, numFonts)
         if success then
             options.fontName = customFontList[selectedFont]
-        end		
+        end
         imgui.PopItemWidth()
         
         -- Main font size
@@ -184,7 +192,7 @@ local function PresentGlobalSettings()
             success, selectedFontCJKMerge = imgui.Combo("Second Font (CJK Range)", selectedFontCJKMerge, customFontList, numFonts)
             if success then
                 options.fontNameCJKMerge = customFontList[selectedFontCJKMerge]
-            end		
+            end
             imgui.PopItemWidth()
 
             imgui.PushItemWidth(imgui.GetWindowWidth() * 0.25)
@@ -237,7 +245,7 @@ local function PresentAddonSettings()
         if imgui.Checkbox("No Resize?", options.noResize == "NoResize") then
             if options.noResize == "NoResize" then
                 options.noResize = ""
-            else 
+            else
                 options.noResize = "NoResize"
             end
         end
@@ -245,7 +253,7 @@ local function PresentAddonSettings()
         if imgui.Checkbox("No Move?", options.noMove == "NoMove") then
             if options.noMove == "NoMove" then
                 options.noMove = ""
-            else 
+            else
                 options.noMove = "NoMove"
             end
         end
@@ -263,14 +271,14 @@ end
 -- Present options/configuration window (this addon itself)
 local function PresentSettingsWindow()
     PresentGlobalSettings()
-    PresentAddonSettings()	
+    PresentAddonSettings()
     PresentSaveButton()
 end
 
--- Setup the options table 
+-- Setup the options table
 if optionsLoaded then
     for _, opt in pairs(_SettingsEditorDefaults) do
-        options[opt[1]] = lib_helpers.NotNilOrDefault(options[opt[1]], opt[2])
+        options[opt[1]] = NotNilOrDefault(options[opt[1]], opt[2])
     end
     pso.set_language(options.language)
 else
@@ -280,7 +288,7 @@ else
     end
     
     -- We just created the options, so we should save to have valid file
-    SaveOptions(options, optionsFileName) 
+    SaveOptions(options, optionsFileName)
 end
 
 -- Load font list, set the global font because it's saved here
@@ -313,7 +321,7 @@ end
 local function init()
     core_mainmenu.add_button("Settings Editor", mainMenuButtonHandler)
     
-    return 
+    return
     {
         name = 'Settings Editor',
         version = '1.0',
@@ -326,9 +334,9 @@ local function init()
     }
 end
 
-return 
+return
 {
-    __addon = 
+    __addon =
     {
         init = init,
     }
