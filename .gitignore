@@ -6,3 +6,5 @@ x64
 *.VC.opendb
 *.vcxproj.user
 *.aps
+
+/addons/*/options.lua
