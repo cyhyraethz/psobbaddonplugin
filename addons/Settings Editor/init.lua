@@ -2,7 +2,6 @@
 --                   There are other global changes involved when changing the font face and size.
 
 local core_mainmenu                    = require("core_mainmenu")
-local lib_helpers                      = require("solylib.helpers")
 local optionsLoaded, options           = pcall(require, "Settings Editor.options")
 local addonName                        = "Settings Editor"
 local addonHome                        = "addons/" .. addonName .. "/"
@@ -102,11 +101,8 @@ end
 
 -- Call the plugin function to prepare next frame
 local function ChangeGlobalFont()
-    local fontName1 = "./" .. addonHome .. "/" .. options.fontName
-    local fontName2 = "./" .. addonHome .. "/" .. options.fontNameCJKMerge
-
     -- Need paths to the font files from the ROOT PSO directory
-    pso.change_global_font(fontName1, options.fontSize, options.oversampleH, options.oversampleV, options.mergeFonts, fontName2, options.fontSizeCJKMerge)
+    pso.change_global_font(options.fontName, options.fontSize, options.oversampleH, options.oversampleV, options.mergeFonts, options.fontNameCJKMerge, options.fontSizeCJKMerge)
 end
 
 local function GetFileExtension(file)
@@ -125,7 +121,7 @@ local function LoadFontList()
     selectedFont = 1
     selectedFontCJKMerge = 1
     
-    local filesInThisDir = pso.list_directory_files(addonName)
+    local filesInThisDir = pso.list_font_files()
     for _, file in pairs(filesInThisDir) do
         -- Only care about ttf... Seems otf doesn't work in imgui
         if CheckFileExtension(file, ".ttf") then

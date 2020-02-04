@@ -16,8 +16,8 @@ static sol::table psolualib_read_mem(sol::table t, int memory_address, int len);
 static std::string psolualib_read_mem_str(int memory_address, int len = 2048);
 static sol::table psolualib_list_addons();
 static void psolualib_change_global_font(std::string font_name, float font_size, int oversampleH = 1, int oversampleV = 1,
-                                         bool mergeFonts = false, std::string font_name2 = "", float font_size2 = -1);
-static sol::table psolualib_list_directory_files(std::string addon_name);
+                                        bool mergeFonts = false, std::string font_name2 = "", float font_size2 = -1);
+static sol::table psolualib_list_font_files();
 static sol::table psolualib_get_language_table();
 static void psolualib_set_language(std::string lang = "EN");
 static std::string psolualib_get_language();
@@ -171,7 +171,7 @@ void psolua_load_library(lua_State * L) {
     psoTable["reload_custom_theme"] = reload_custom_theme;
     psoTable["get_tick_count"] = get_tick_count;
     psoTable["change_global_font"] = psolualib_change_global_font;
-    psoTable["list_directory_files"] = psolualib_list_directory_files;
+    psoTable["list_font_files"] = psolualib_list_font_files;
     psoTable["set_language"] = psolualib_set_language;
     psoTable["get_language"] = psolualib_get_language;
     lua["print"]("PSOBB Base address is ", g_PSOBaseAddress);
@@ -281,6 +281,7 @@ static sol::table psolualib_list_addons() {
         std::string filename(find.cFileName);
         if (filename == "..") continue;
         if (filename == ".") continue;
+        if (filename == "fonts") continue;
         if (find.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
             ret.add(filename);
         }
@@ -348,7 +349,7 @@ void loadCustomTheme()
     ImGuiIO& io = ImGui::GetIO();
     ImGuiStyle& style = ImGui::GetStyle();
 
-    // GetPrivateProfile* functions require absolute path to the file 
+    // GetPrivateProfile* functions require absolute path to the file
     // it will be reading from to be able to read from the application's directory
     wchar_t lpAppName[128] = { 0 };
     wchar_t lpKeyName[128] = { 0 };
@@ -415,40 +416,27 @@ void psolualib_change_global_font(std::string font_name, float font_size, int ov
     g_NewFontSize = font_size;
     g_NewFontOversampleH = oversampleH;
     g_NewFontOversampleV = oversampleV;
-    strncpy(g_NewFontName, font_name.c_str(), MAX_PATH);
+    sprintf(g_NewFontName, "./addons/fonts/%s", font_name.c_str());
     g_NewFontName[MAX_PATH - 1] = '\0';
 
     g_MergeFonts = mergeFonts;
-    strncpy(g_NewFontName2, font_name2.c_str(), MAX_PATH);
+    sprintf(g_NewFontName2, "./addons/fonts/%s", font_name2.c_str());
     g_NewFontName2[MAX_PATH - 1] = '\0';
     g_NewFontSize2 = font_size2;
 }
 
 // List the files in a directory and return it to the addon
-sol::table psolualib_list_directory_files(std::string directory_name) {
+sol::table psolualib_list_font_files() {
     sol::state_view lua(g_LuaState);
-    const char     *pdirectoryName = directory_name.c_str();
-    char            directoryPath[MAX_PATH];
+    char            fontsPath[MAX_PATH];
     HANDLE          hFind;
     WIN32_FIND_DATA find;
     sol::table      ret = lua.create_table();
 
-    // TODO: only invalidate paths that traverse up
-    for (size_t i = 0; i < strlen(pdirectoryName); ++i)
-    {
-        char a = pdirectoryName[i];
-        // Don't allow going up and down directory structure...
-        if (!((' ' == a) ||
-            ('A' <= a && a <= 'Z') ||
-            ('a' <= a && a <= 'z') ||
-            ('0' <= a && a <= '9')))
-            throw "Invalid addon name specified";
-    }
+    snprintf(fontsPath, MAX_PATH, "./addons/fonts/*");
+    fontsPath[MAX_PATH - 1] = '\0';
 
-    snprintf(directoryPath, MAX_PATH, "addons/%s/*", directory_name.c_str());
-    directoryPath[MAX_PATH - 1] = '\0';
-
-    hFind = FindFirstFileA(directoryPath, &find);
+    hFind = FindFirstFileA(fontsPath, &find);
     do {
         std::string filename(find.cFileName);
         if (filename == "..") continue;
@@ -468,4 +456,3 @@ void psolualib_set_language(std::string lang) {
 std::string psolualib_get_language() {
     return g_LanguageSetting;
 }
-
