@@ -56,3 +56,9 @@ PSO specific functions are in the `pso` global table.
  * read_mem_str(addr, len) -- read len bytes from addr into a string (not null terminated). lua treats binary files the same way it does text files so this can be used to efficiently write sections of memory directly to a file.
  * reload() -- at the end of present, re-initialize the lua state. all addons and modules will be reloaded, no state will be preserved.
  * base_address -- the base address of the PSOBB process
+ * reload_custom_theme -- after the current frame, the custom theme is applied to handle changes.
+ * get_tick_count -- returns the number of ticks for a timer.
+ * change_global_font -- after the current frame, changes the font at runtime using the specified settings.
+ * list_directory_files -- list files in the specified directory under the addons directory.
+ * set_language -- used by the Settings Editor to set the internal language for addons.
+ * get_language -- retrieves the language value for addons to handle translation.
