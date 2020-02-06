@@ -555,10 +555,10 @@ static int w_BeginChild(lua_State *L)
 ** Custom bindings
 */
 
-static int w_GetStyleColName(lua_State *L)
+static int w_GetStyleColorName(lua_State *L)
 {
     int idx = luaL_checkint(L, 1);
-    lua_pushstring(L, ImGui::GetStyleColName(idx - 1));
+    lua_pushstring(L, ImGui::GetStyleColorName(idx - 1));
     return 1;
 }
 
@@ -696,7 +696,7 @@ static const struct luaL_Reg imguilib[] = {
 //#include "imgui_iterator_dock.h"
 
   // Custom
-  { "GetStyleColName", w_GetStyleColName },
+  { "GetStyleColorName", w_GetStyleColorName },
   { "GetStyleColCount", w_GetStyleColCount },
 
   // Overrides
