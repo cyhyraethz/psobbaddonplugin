@@ -81,49 +81,54 @@ end
 
 local fontGlobalScale = 1.0
 local colorList = {
-    { name = "Text"                   , color = "FFE5E5E5" },
-    { name = "TextDisabled"           , color = "FF999999" },
-    { name = "WindowBg"               , color = "B2000000" },
-    { name = "ChildWindowBg"          , color = "00000000" },
-    { name = "PopupBg"                , color = "E50C0C19" },
-    { name = "Border"                 , color = "A5B2B2B2" },
-    { name = "BorderShadow"           , color = "00000000" },
-    { name = "FrameBg"                , color = "4CCCCCCC" },
-    { name = "FrameBgHovered"         , color = "66E5CCCC" },
-    { name = "FrameBgActive"          , color = "72E5A5A5" },
-    { name = "TitleBg"                , color = "D3444489" },
-    { name = "TitleBgCollapsed"       , color = "336666CC" },
-    { name = "TitleBgActive"          , color = "DD5151A0" },
-    { name = "MenuBarBg"              , color = "CC66668C" },
-    { name = "ScrollbarBg"            , color = "99333F4C" },
-    { name = "ScrollbarGrab"          , color = "4C6666CC" },
-    { name = "ScrollbarGrabHovered"   , color = "666666CC" },
-    { name = "ScrollbarGrabActive"    , color = "66CC7F7F" },
-    { name = "ComboBg"                , color = "FC333333" },
-    { name = "CheckMark"              , color = "7FE5E5E5" },
-    { name = "SliderGrab"             , color = "4CFFFFFF" },
-    { name = "SliderGrabActive"       , color = "FFCC7F7F" },
-    { name = "Button"                 , color = "99AA6666" },
-    { name = "ButtonHovered"          , color = "FFAA6666" },
-    { name = "ButtonActive"           , color = "FFCC7F7F" },
-    { name = "Header"                 , color = "726666E5" },
-    { name = "HeaderHovered"          , color = "CC7272E5" },
-    { name = "HeaderActive"           , color = "CC8787DD" },
-    { name = "Column"                 , color = "FF7F7F7F" },
-    { name = "ColumnHovered"          , color = "FFB29999" },
-    { name = "ColumnActive"           , color = "FFE5B2B2" },
-    { name = "ResizeGrip"             , color = "4CFFFFFF" },
-    { name = "ResizeGripHovered"      , color = "99FFFFFF" },
-    { name = "ResizeGripActive"       , color = "E5FFFFFF" },
-    { name = "CloseButton"            , color = "7F7F7FE5" },
-    { name = "CloseButtonHovered"     , color = "99B2B2E5" },
-    { name = "CloseButtonActive"      , color = "FFB2B2B2" },
-    { name = "PlotLines"              , color = "FFFFFFFF" },
-    { name = "PlotLinesHovered"       , color = "FFE5B200" },
-    { name = "PlotHistogram"          , color = "FFE5B200" },
-    { name = "PlotHistogramHovered"   , color = "FFFF9900" },
-    { name = "TextSelectedBg"         , color = "590000FF" },
-    { name = "ModalWindowDarkening"   , color = "59333333" },
+    { name = "Text"                 , color = "FFFFFFFF" },
+    { name = "TextDisabled"         , color = "7F7F7FFF" },
+    { name = "WindowBg"             , color = "0F0F0FEF" },
+    { name = "ChildBg"              , color = "00000000" },
+    { name = "PopupBg"              , color = "141414EF" },
+    { name = "Border"               , color = "6D6D7F7F" },
+    { name = "BorderShadow"         , color = "00000000" },
+    { name = "FrameBg"              , color = "28497A89" },
+    { name = "FrameBgHovered"       , color = "4296F966" },
+    { name = "FrameBgActive"        , color = "4296F9AA" },
+    { name = "TitleBg"              , color = "0A0A0AFF" },
+    { name = "TitleBgActive"        , color = "28497AFF" },
+    { name = "TitleBgCollapsed"     , color = "00000082" },
+    { name = "MenuBarBg"            , color = "232323FF" },
+    { name = "ScrollbarBg"          , color = "05050587" },
+    { name = "ScrollbarGrab"        , color = "4F4F4FFF" },
+    { name = "ScrollbarGrabHovered" , color = "686868FF" },
+    { name = "ScrollbarGrabActive"  , color = "828282FF" },
+    { name = "CheckMark"            , color = "4296F9FF" },
+    { name = "SliderGrab"           , color = "3D84E0FF" },
+    { name = "SliderGrabActive"     , color = "4296F9FF" },
+    { name = "Button"               , color = "4296F966" },
+    { name = "ButtonHovered"        , color = "4296F9FF" },
+    { name = "ButtonActive"         , color = "0F87F9FF" },
+    { name = "Header"               , color = "4296F94F" },
+    { name = "HeaderHovered"        , color = "4296F9CC" },
+    { name = "HeaderActive"         , color = "4296F9FF" },
+    { name = "Separator"            , color = "6D6D7F7F" },
+    { name = "SeparatorHovered"     , color = "1966BFC6" },
+    { name = "SeparatorActive"      , color = "1966BFFF" },
+    { name = "ResizeGrip"           , color = "4296F93F" },
+    { name = "ResizeGripHovered"    , color = "4296F9AA" },
+    { name = "ResizeGripActive"     , color = "4296F9F2" },
+    { name = "Tab"                  , color = "2D5993DB" },
+    { name = "TabHovered"           , color = "4296F9CC" },
+    { name = "TabActive"            , color = "3268ADFF" },
+    { name = "TabUnfocused"         , color = "111A25F7" },
+    { name = "TabUnfocusedActive"   , color = "22426CFF" },
+    { name = "PlotLines"            , color = "9B9B9BFF" },
+    { name = "PlotLinesHovered"     , color = "FF6D59FF" },
+    { name = "PlotHistogram"        , color = "E5B200FF" },
+    { name = "PlotHistogramHovered" , color = "FF9900FF" },
+    { name = "TextSelectedBg"       , color = "4296F959" },
+    { name = "DragDropTarget"       , color = "FFFF00E5" },
+    { name = "NavHighlight"         , color = "4296F9FF" },
+    { name = "NavWindowingHighlight", color = "FFFFFFB2" },
+    { name = "NavWindowingDimBg"    , color = "CCCCCC33" },
+    { name = "ModalWindowDimBg"     , color = "CCCCCC59" },
 }
 
 local core_mainmenu = require("core_mainmenu")
@@ -136,50 +141,56 @@ local theme =
         FontGlobalScale = 1.0,
     },
     ImGuiStyle = {
-        Alpha                = 1.0,
-        Text                 = "FFE5E5E5",
-        TextDisabled         = "FF999999",
-        WindowBg             = "B2000000",
-        ChildWindowBg        = "00000000",
-        PopupBg              = "E50C0C19",
-        Border               = "A5B2B2B2",
-        BorderShadow         = "00000000",
-        FrameBg              = "4CCCCCCC",
-        FrameBgHovered       = "66E5CCCC",
-        FrameBgActive        = "72E5A5A5",
-        TitleBg              = "D3444489",
-        TitleBgCollapsed     = "336666CC",
-        TitleBgActive        = "DD5151A0",
-        MenuBarBg            = "CC66668C",
-        ScrollbarBg          = "99333F4C",
-        ScrollbarGrab        = "4C6666CC",
-        ScrollbarGrabHovered = "666666CC",
-        ScrollbarGrabActive  = "66CC7F7F",
-        ComboBg              = "FC333333",
-        CheckMark            = "7FE5E5E5",
-        SliderGrab           = "4CFFFFFF",
-        SliderGrabActive     = "FFCC7F7F",
-        Button               = "99AA6666",
-        ButtonHovered        = "FFAA6666",
-        ButtonActive         = "FFCC7F7F",
-        Header               = "726666E5",
-        HeaderHovered        = "CC7272E5",
-        HeaderActive         = "CC8787DD",
-        Column               = "FF7F7F7F",
-        ColumnHovered        = "FFB29999",
-        ColumnActive         = "FFE5B2B2",
-        ResizeGrip           = "4CFFFFFF",
-        ResizeGripHovered    = "99FFFFFF",
-        ResizeGripActive     = "E5FFFFFF",
-        CloseButton          = "7F7F7FE5",
-        CloseButtonHovered   = "99B2B2E5",
-        CloseButtonActive    = "FFB2B2B2",
-        PlotLines            = "FFFFFFFF",
-        PlotLinesHovered     = "FFE5B200",
-        PlotHistogram        = "FFE5B200",
-        PlotHistogramHovered = "FFFF9900",
-        TextSelectedBg       = "590000FF",
-        ModalWindowDarkening = "59333333",
+        Alpha                 = 1.0,
+        Text                  = "FFE5E5E5",
+        Text                  = "FFFFFFFF",
+        TextDisabled          = "7F7F7FFF",
+        WindowBg              = "0F0F0FEF",
+        ChildBg               = "00000000",
+        PopupBg               = "141414EF",
+        Border                = "6D6D7F7F",
+        BorderShadow          = "00000000",
+        FrameBg               = "28497A89",
+        FrameBgHovered        = "4296F966",
+        FrameBgActive         = "4296F9AA",
+        TitleBg               = "0A0A0AFF",
+        TitleBgActive         = "28497AFF",
+        TitleBgCollapsed      = "00000082",
+        MenuBarBg             = "232323FF",
+        ScrollbarBg           = "05050587",
+        ScrollbarGrab         = "4F4F4FFF",
+        ScrollbarGrabHovered  = "686868FF",
+        ScrollbarGrabActive   = "828282FF",
+        CheckMark             = "4296F9FF",
+        SliderGrab            = "3D84E0FF",
+        SliderGrabActive      = "4296F9FF",
+        Button                = "4296F966",
+        ButtonHovered         = "4296F9FF",
+        ButtonActive          = "0F87F9FF",
+        Header                = "4296F94F",
+        HeaderHovered         = "4296F9CC",
+        HeaderActive          = "4296F9FF",
+        Separator             = "6D6D7F7F",
+        SeparatorHovered      = "1966BFC6",
+        SeparatorActive       = "1966BFFF",
+        ResizeGrip            = "4296F93F",
+        ResizeGripHovered     = "4296F9AA",
+        ResizeGripActive      = "4296F9F2",
+        Tab                   = "2D5993DB",
+        TabHovered            = "4296F9CC",
+        TabActive             = "3268ADFF",
+        TabUnfocused          = "111A25F7",
+        TabUnfocusedActive    = "22426CFF",
+        PlotLines             = "9B9B9BFF",
+        PlotLinesHovered      = "FF6D59FF",
+        PlotHistogram         = "E5B200FF",
+        PlotHistogramHovered  = "FF9900FF",
+        TextSelectedBg        = "4296F959",
+        DragDropTarget        = "FFFF00E5",
+        NavHighlight          = "4296F9FF",
+        NavWindowingHighlight = "FFFFFFB2",
+        NavWindowingDimBg     = "CCCCCC33",
+        ModalWindowDimBg      = "CCCCCC59",
     }
 }
 
@@ -205,72 +216,56 @@ local function ExportTheme()
     pso.reload_custom_theme()
 end
 
+local function Round(num, numDecimalPlaces)
+    return tonumber(string.format("%." .. (numDecimalPlaces or 0) .. "f", num))
+end
+
+local function F32ToInt8(value)
+    return Round(value * 255)
+end
+
+local function FloatsToColor(color)
+    local color =
+        bit.lshift(bit.band(F32ToInt8(color.r), 0xFF), 24) +
+        bit.lshift(bit.band(F32ToInt8(color.g), 0xFF), 16) +
+        bit.lshift(bit.band(F32ToInt8(color.b), 0xFF), 8) +
+        bit.lshift(bit.band(F32ToInt8(color.a), 0xFF), 0)
+    return color
+end
+
+local function ColorAsFloats(color)
+    color = color or 0xFFFFFFFF
+
+    local r = bit.band(bit.rshift(color, 24), 0xFF) / 255;
+    local g = bit.band(bit.rshift(color, 16), 0xFF) / 255;
+    local b = bit.band(bit.rshift(color, 8), 0xFF) / 255;
+    local a = bit.band(color, 0xFF) / 255;
+
+    return { r = r, g = g, b = b, a = a }
+end
+
 -- UI stuff
-local function PresentColorEditor(label, default, custom)
+local function PresentColorEditor(label, default, custom, index)
     custom = custom or 0xFFFFFFFF
 
     local changed = false
-    local i_default =
-    {
-        bit.band(bit.rshift(default, 24), 0xFF),
-        bit.band(bit.rshift(default, 16), 0xFF),
-        bit.band(bit.rshift(default, 8), 0xFF),
-        bit.band(default, 0xFF)
-    }
-    local i_custom =
-    {
-        bit.band(bit.rshift(custom, 24), 0xFF),
-        bit.band(bit.rshift(custom, 16), 0xFF),
-        bit.band(bit.rshift(custom, 8), 0xFF),
-        bit.band(custom, 0xFF)
-    }
-
-    local ids = { "##X", "##Y", "##Z", "##W" }
-    local fmt = { "A:%3.0f", "B:%3.0f", "G:%3.0f", "B:%3.0f" }
-
+    local i_default = ColorAsFloats(default)
+    local i_custom = ColorAsFloats(custom)
+    
     imgui.BeginGroup()
     imgui.PushID(label)
-
-    imgui.PushItemWidth(50)
-    for n = 1, 4, 1 do
-        local changedDragInt = false
-        if n ~= 1 then
-            imgui.SameLine(0, 5)
-        end
-
-        changedDragInt, i_custom[n] = imgui.DragInt(ids[n], i_custom[n], 1.0, 0, 255, fmt[n])
+    
+    result, i_custom.r, i_custom.g, i_custom.b, i_custom.a = imgui.ColorEdit4(label, i_custom.r, i_custom.g, i_custom.b, i_custom.a)
+    
+    default = FloatsToColor(i_default)
+    custom = FloatsToColor(i_custom)
+    
+    
+    if index == 1 then
+        print('Color')
+        print(string.format("%08X", custom))
     end
-    imgui.PopItemWidth()
-
-    imgui.SameLine(0, 5)
-    imgui.ColorButton(i_custom[2] / 255, i_custom[3] / 255, i_custom[4] / 255, 1.0)
-    if imgui.IsItemHovered() then
-        imgui.SetTooltip(
-            string.format(
-                "#%02X%02X%02X%02X",
-                i_custom[4],
-                i_custom[1],
-                i_custom[2],
-                i_custom[3]
-            )
-        )
-    end
-
-    imgui.SameLine(0, 5)
-    imgui.Text(label)
-
-    default =
-    bit.lshift(i_default[1], 24) +
-    bit.lshift(i_default[2], 16) +
-    bit.lshift(i_default[3], 8) +
-    bit.lshift(i_default[4], 0)
-
-    custom =
-    bit.lshift(i_custom[1], 24) +
-    bit.lshift(i_custom[2], 16) +
-    bit.lshift(i_custom[3], 8) +
-    bit.lshift(i_custom[4], 0)
-
+    
     if custom ~= default then
         imgui.SameLine(0, 5)
         if imgui.Button("Revert") then
@@ -309,8 +304,12 @@ local function PresentColorEditors()
 
         imgui.BeginChild("ColorList", 0)
         for i = 1, table.getn(colorList), 1 do
-            theme.ImGuiStyle[colorList[i].name] = string.format("%08X",
-                PresentColorEditor(colorList[i].name, tonumber("0x" .. colorList[i].color), tonumber("0x" .. theme.ImGuiStyle[colorList[i].name])))
+            if theme.ImGuiStyle[colorList[i].name] == nil then
+                theme.ImGuiStyle[colorList[i].name] = colorList[i].color
+            end
+            
+            local result = PresentColorEditor(colorList[i].name, tonumber("0x" .. colorList[i].color), tonumber("0x" .. theme.ImGuiStyle[colorList[i].name]), i)
+            theme.ImGuiStyle[colorList[i].name] = string.format("%08X", result)
         end
         imgui.EndChild()
     end

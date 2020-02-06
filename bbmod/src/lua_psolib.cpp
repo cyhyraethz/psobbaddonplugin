@@ -402,10 +402,11 @@ void loadCustomTheme()
         if (ret != 0) {
             unsigned int color = wcstoul(lpReturnedString, NULL, 16);
             style.Colors[i] = ImVec4(
+                ((color >> 24) & 0xFF)* s,
                 ((color >> 16) & 0xFF) * s,
                 ((color >> 8) & 0xFF) * s,
-                ((color >> 0) & 0xFF) * s,
-                ((color >> 24) & 0xFF) * s);
+                ((color >> 0) & 0xFF) * s
+            );
         }
         else
         {
