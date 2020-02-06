@@ -579,7 +579,7 @@ void ImGui_BetweenFrameChanges(void) {
         if (strncmp(g_NewFontName, g_LoadedFontName, MAX_PATH) ||
             strncmp(g_NewFontName2, g_LoadedFontName2, MAX_PATH) ||
             abs(g_LoadedFontSize - g_NewFontSize) > 0.01 ||
-            abs(g_LoadedFontSize2 - g_NewFontSize2) > 0.01 || 
+            abs(g_LoadedFontSize2 - g_NewFontSize2) > 0.01 ||
             g_NewFontOversampleH != g_LoadedFontOversampleH ||
             g_NewFontOversampleV != g_LoadedFontOversampleV ||
             g_LoadedFontMergeMode != g_MergeFonts) {
@@ -609,7 +609,7 @@ void ImGui_BetweenFrameChanges(void) {
                 ImFont *ptmp;
                 // Load the font, if we are merging fonts then load only default glyph range
                 ptmp = io.Fonts->AddFontFromFileTTF(g_NewFontName, g_NewFontSize, &font_cfg,
-                                    g_MergeFonts ? io.Fonts->GetGlyphRangesDefault() : io.Fonts->GetGlyphRangesChinese());
+                                    g_MergeFonts ? io.Fonts->GetGlyphRangesDefault() : io.Fonts->GetGlyphRangesChineseFull());
                 if (ptmp) {
                     // Font was loaded successfully, save the info about it.
                     g_LoadedFont = ptmp;
@@ -629,7 +629,7 @@ void ImGui_BetweenFrameChanges(void) {
                             font_cfg.SizePixels = g_NewFontSize2;
                             font_cfg.MergeMode = true;
 
-                            ptmp = io.Fonts->AddFontFromFileTTF(g_NewFontName2, g_NewFontSize2, &font_cfg, io.Fonts->GetGlyphRangesChinese());
+                            ptmp = io.Fonts->AddFontFromFileTTF(g_NewFontName2, g_NewFontSize2, &font_cfg, io.Fonts->GetGlyphRangesChineseFull());
                             if (ptmp) {
                                 // Loaded successfully
                                 g_LoadedFont2 = ptmp;
@@ -660,12 +660,12 @@ void ImGui_BetweenFrameChanges(void) {
                 // Failed to load, we also cleared the current font above and we may be able to
                 // restore it, but we'll leave it up to addon to provide correct file.
                 snprintf(g_LoadedFontName, MAX_PATH, "");
-                g_LoadedFontSize = 13; 
+                g_LoadedFontSize = 13;
                 g_LoadedFont = NULL;
 
                 // Setup the default font so that we can keep the client running
                 io.Fonts->AddFontDefault();
-                ImGui_ImplDX9_CreateFontsTexture(); 
+                ImGui_ImplDX9_CreateFontsTexture();
             }
         }
     }
