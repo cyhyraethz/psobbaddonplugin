@@ -295,7 +295,7 @@ wchar_t *themeElements[ImGuiCol_COUNT]
     L"Text",
     L"TextDisabled",
     L"WindowBg",
-    L"ChildWindowBg",
+    L"ChildBg",
     L"PopupBg",
     L"Border",
     L"BorderShadow",
@@ -303,14 +303,13 @@ wchar_t *themeElements[ImGuiCol_COUNT]
     L"FrameBgHovered",
     L"FrameBgActive",
     L"TitleBg",
-    L"TitleBgCollapsed",
     L"TitleBgActive",
+    L"TitleBgCollapsed",
     L"MenuBarBg",
     L"ScrollbarBg",
     L"ScrollbarGrab",
     L"ScrollbarGrabHovered",
     L"ScrollbarGrabActive",
-    L"ComboBg",
     L"CheckMark",
     L"SliderGrab",
     L"SliderGrabActive",
@@ -320,21 +319,27 @@ wchar_t *themeElements[ImGuiCol_COUNT]
     L"Header",
     L"HeaderHovered",
     L"HeaderActive",
-    L"Column",
-    L"ColumnHovered",
-    L"ColumnActive",
+    L"Separator",
+    L"SeparatorHovered",
+    L"SeparatorActive",
     L"ResizeGrip",
     L"ResizeGripHovered",
     L"ResizeGripActive",
-    L"CloseButton",
-    L"CloseButtonHovered",
-    L"CloseButtonActive",
+    L"Tab",
+    L"TabHovered",
+    L"TabActive",
+    L"TabUnfocused",
+    L"TabUnfocusedActive",
     L"PlotLines",
     L"PlotLinesHovered",
     L"PlotHistogram",
     L"PlotHistogramHovered",
     L"TextSelectedBg",
-    L"ModalWindowDarkening",
+    L"DragDropTarget",
+    L"NavHighlight",
+    L"NavWindowingHighlight",
+    L"NavWindowingDimBg",
+    L"ModalWindowDimBg"
 };
 
 void loadCustomTheme()
@@ -346,6 +351,7 @@ void loadCustomTheme()
     const ImGuiIO default_io;
     const ImGuiStyle default_style;
 
+    ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO();
     ImGuiStyle& style = ImGui::GetStyle();
 
