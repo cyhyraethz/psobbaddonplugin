@@ -18,7 +18,7 @@ struct AppLog
 
     void    Clear() { Buf.clear(); LineOffsets.clear(); }
 
-    void    AddLog(const char* fmt, ...) IM_PRINTFARGS(2)
+    void    AddLog(const char* fmt, ...)
     {
         int old_size = Buf.size();
         va_list args;
