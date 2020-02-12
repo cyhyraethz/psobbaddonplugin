@@ -221,8 +221,10 @@ void psolua_initialize_state(void) {
 }
 
 static std::string psolualib_read_cstr(int memory_address, int len) {
-    char buf[8192];
-    memset(buf, 0, len + 1);
+    char buf[8192] = { 0 };
+    if (len >= 8192) {
+        len = (8192 - 1);
+    }
     if (memcpy_s((void*)buf, len, (void*)memory_address, len)) {
         throw "memcpy_s error";
     }
@@ -230,15 +232,18 @@ static std::string psolualib_read_cstr(int memory_address, int len) {
 }
 
 static std::string psolualib_read_wstr(int memory_address, int len) {
-    char buf[8192];
-    char buf2[8192];
+    char buf[8192] = { 0 };
+    char buf2[8192] = { 0 };
+
     // len is number of wide chars
-    memset(buf, 0, len * 2 + 2);
-    memset(buf2, 0, len * 2 + 2);
+    if (len >= 4096) {
+        len = (4096 - 1);
+    }
+
     if (memcpy_s((void*)buf, (len * 2), (void*)memory_address, (len * 2))) {
         throw "memcpy_s error";
     }
-    if (!WideCharToMultiByte(CP_UTF8, 0, (LPCWCH)buf, len, buf2, 8192, nullptr, nullptr)) {
+    if (!WideCharToMultiByte(CP_UTF8, 0, (LPCWCH)buf, len, buf2, len * 2, nullptr, nullptr)) {
         throw "invalid utf-16 string";
     }
     return buf2;
@@ -246,10 +251,12 @@ static std::string psolualib_read_wstr(int memory_address, int len) {
 
 static sol::table psolualib_read_mem(sol::table t, int memory_address, int len) {
     sol::state_view lua(g_LuaState);
-    unsigned char buf[8192];
-    memset(buf, 0, len);
+    unsigned char buf[8192] = { 0 };
     if (len < 0) {
         throw "length must be greater than 0";
+    }
+    if (len > 8192) {
+        len = 8192;
     }
     if (memcpy_s((void*)buf, len, (void*)memory_address, len)) {
         throw "memcpy_s error";
@@ -261,8 +268,10 @@ static sol::table psolualib_read_mem(sol::table t, int memory_address, int len) 
 }
 
 static std::string psolualib_read_mem_str(int memory_address, int len) {
-    char buf[8192];
-    memset(buf, 0, len);
+    char buf[8192] = { 0 };
+    if (len > 8192) {
+        len = 8192;
+    }
     if (memcpy_s((void*)buf, len, (void*)memory_address, len)) {
         throw "memcpy_s error";
     }
