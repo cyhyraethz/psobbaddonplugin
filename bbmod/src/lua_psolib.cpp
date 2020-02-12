@@ -222,8 +222,8 @@ void psolua_initialize_state(void) {
 
 static std::string psolualib_read_cstr(int memory_address, int len) {
     char buf[8192];
-    memset(buf, 0, len);
-    if (memcpy_s((void*)buf, (len - 1), (void*)memory_address, (len - 1))) {
+    memset(buf, 0, len + 1);
+    if (memcpy_s((void*)buf, len, (void*)memory_address, len)) {
         throw "memcpy_s error";
     }
     return buf;
@@ -232,9 +232,10 @@ static std::string psolualib_read_cstr(int memory_address, int len) {
 static std::string psolualib_read_wstr(int memory_address, int len) {
     char buf[8192];
     char buf2[8192];
-    memset(buf, 0, len * 2);
-    memset(buf2, 0, len * 2);
-    if (memcpy_s((void*)buf, (len - 2), (void*)memory_address, (len - 2))) {
+    // len is number of wide chars
+    memset(buf, 0, len * 2 + 2);
+    memset(buf2, 0, len * 2 + 2);
+    if (memcpy_s((void*)buf, (len * 2), (void*)memory_address, (len * 2))) {
         throw "memcpy_s error";
     }
     if (!WideCharToMultiByte(CP_UTF8, 0, (LPCWCH)buf, len, buf2, 8192, nullptr, nullptr)) {
