@@ -92,7 +92,10 @@ static void psolualib_set_sleep_hack_enabled(bool enabled) {
 template <typename T> std::function<T(int)> read_t(void) {
     return [=](int addr) {
         char buf[sizeof(T)];
-        if (memcpy_s((void*)buf, sizeof(T), (void*)addr, sizeof(T))) {
+        __try {
+            memcpy_s((void *)buf, sizeof(T), (void *)addr, sizeof(T));
+        }
+        __except(EXCEPTION_EXECUTE_HANDLER) {
             throw "memcpy_s error";
         }
         return *(T*)buf;
@@ -220,14 +223,38 @@ void psolua_initialize_state(void) {
     loadCustomTheme();
 }
 
+static char *psolualib_read_cstr_SEH(int memory_address, int len, char *buf)
+{
+    __try {
+        memcpy_s((void*)buf, len, (void*)memory_address, len);
+    }
+    __except (EXCEPTION_EXECUTE_HANDLER) {
+        throw "memcpy_s error";
+    }
+    return buf;
+}
+
 static std::string psolualib_read_cstr(int memory_address, int len) {
     char buf[8192] = { 0 };
     if (len >= 8192) {
         len = (8192 - 1);
     }
-    if (memcpy_s((void*)buf, len, (void*)memory_address, len)) {
+
+    try { psolualib_read_cstr_SEH(memory_address, len, buf); }
+    catch (...) { throw; }
+
+    return buf;
+}
+
+static char *psolualib_read_wstr_SEH(int memory_address, int len, char *buf)
+{
+    __try {
+        memcpy_s((void*)buf, (len * 2), (void*)memory_address, (len * 2));
+    }
+    __except (EXCEPTION_EXECUTE_HANDLER) {
         throw "memcpy_s error";
     }
+
     return buf;
 }
 
@@ -240,41 +267,67 @@ static std::string psolualib_read_wstr(int memory_address, int len) {
         len = (4096 - 1);
     }
 
-    if (memcpy_s((void*)buf, (len * 2), (void*)memory_address, (len * 2))) {
-        throw "memcpy_s error";
-    }
+    try { psolualib_read_wstr_SEH(memory_address, len, buf); }
+    catch (...) { throw; }
+ 
     if (!WideCharToMultiByte(CP_UTF8, 0, (LPCWCH)buf, len, buf2, len * 2, nullptr, nullptr)) {
         throw "invalid utf-16 string";
     }
     return buf2;
 }
 
+static unsigned char *psolualib_read_mem_SEH(int memory_address, int len, unsigned char *buf)
+{
+    __try{
+        memcpy_s((void*)buf, len, (void*)memory_address, len);
+    }
+    __except (EXCEPTION_EXECUTE_HANDLER) {
+        throw "mempcy_s error";
+    }
+
+    return buf;
+}
+
 static sol::table psolualib_read_mem(sol::table t, int memory_address, int len) {
     sol::state_view lua(g_LuaState);
     unsigned char buf[8192] = { 0 };
-    if (len < 0) {
+    if (len <= 0) {
         throw "length must be greater than 0";
     }
-    if (len > 8192) {
-        len = 8192;
+    if (len >= 8192) {
+        len = 8192 - 1;
     }
-    if (memcpy_s((void*)buf, len, (void*)memory_address, len)) {
-        throw "memcpy_s error";
-    }
+
+    try { psolualib_read_mem_SEH(memory_address, len, buf); }
+    catch (...) { throw; }
+
     for (int i = 0; i < len; i++) {
         t.add((int)buf[i]);
     }
     return t;
 }
 
+static char *psolualib_read_mem_str_SEH(int memory_address, int len, char *buf)
+{
+    __try {
+        memcpy_s((void*)buf, len, (void*)memory_address, len);
+    }
+    __except (EXCEPTION_EXECUTE_HANDLER) {
+        throw "memcpy_s() error";
+    }
+
+    return buf;
+}
+
 static std::string psolualib_read_mem_str(int memory_address, int len) {
     char buf[8192] = { 0 };
-    if (len > 8192) {
+    if (len >= 8192) {
         len = 8192;
     }
-    if (memcpy_s((void*)buf, len, (void*)memory_address, len)) {
-        throw "memcpy_s error";
-    }
+
+    try { psolualib_read_mem_str_SEH(memory_address, len, buf); }
+    catch (...) { throw; }
+
     return std::string(buf, len);
 }
 
