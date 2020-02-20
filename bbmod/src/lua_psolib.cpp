@@ -18,7 +18,6 @@ static sol::table psolualib_list_addons();
 static void psolualib_change_global_font(std::string font_name, float font_size, int oversampleH = 1, int oversampleV = 1,
                                         bool mergeFonts = false, std::string font_name2 = "", float font_size2 = -1);
 static sol::table psolualib_list_font_files();
-static sol::table psolualib_get_language_table();
 static void psolualib_set_language(std::string lang = "EN");
 static std::string psolualib_get_language();
 
