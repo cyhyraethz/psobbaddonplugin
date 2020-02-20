@@ -8,3 +8,4 @@ x64
 *.aps
 
 /addons/*/options.lua
+/bbmod.zip
