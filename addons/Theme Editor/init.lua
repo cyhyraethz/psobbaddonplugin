@@ -226,7 +226,7 @@ local function PresentColorEditor(label, default, custom)
     }
 
     local ids = { "##X", "##Y", "##Z", "##W" }
-    local fmt = { "A:%3.0f", "B:%3.0f", "G:%3.0f", "B:%3.0f" }
+    local fmt = { "A:%3.0f", "R:%3.0f", "G:%3.0f", "B:%3.0f" }
 
     imgui.BeginGroup()
     imgui.PushID(label)
