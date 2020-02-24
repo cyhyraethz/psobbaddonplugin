@@ -236,7 +236,7 @@ static char *psolualib_read_cstr_SEH(int memory_address, int len, char *buf)
 static std::string psolualib_read_cstr(int memory_address, int len) {
     char buf[8192] = { 0 };
     if (len >= 8192) {
-        len = (8192 - 1);
+        len = 8191;
     }
 
     try { psolualib_read_cstr_SEH(memory_address, len, buf); }
@@ -245,34 +245,26 @@ static std::string psolualib_read_cstr(int memory_address, int len) {
     return buf;
 }
 
-static char *psolualib_read_wstr_SEH(int memory_address, int len, char *buf)
+static char *psolualib_read_wstr_SEH(int memory_address, int len, char *buf, int buf_len)
 {
     __try {
-        memcpy_s((void*)buf, (len * 2), (void*)memory_address, (len * 2));
+        if (!WideCharToMultiByte(CP_UTF8, 0, (LPCWCH)memory_address, len, buf, buf_len, nullptr, nullptr)) {
+            throw "invalid utf-16 string";
+        }
     }
     __except (EXCEPTION_EXECUTE_HANDLER) {
-        throw "memcpy_s error";
+        throw "WideCharToMultiByte error";
     }
-
     return buf;
 }
 
 static std::string psolualib_read_wstr(int memory_address, int len) {
     char buf[8192] = { 0 };
-    char buf2[8192] = { 0 };
 
-    // len is number of wide chars
-    if (len >= 4096) {
-        len = (4096 - 1);
-    }
-
-    try { psolualib_read_wstr_SEH(memory_address, len, buf); }
+    try { psolualib_read_wstr_SEH(memory_address, len, buf, 8192); }
     catch (...) { throw; }
- 
-    if (!WideCharToMultiByte(CP_UTF8, 0, (LPCWCH)buf, len, buf2, len * 2, nullptr, nullptr)) {
-        throw "invalid utf-16 string";
-    }
-    return buf2;
+
+    return buf;
 }
 
 static unsigned char *psolualib_read_mem_SEH(int memory_address, int len, unsigned char *buf)
@@ -294,7 +286,7 @@ static sol::table psolualib_read_mem(sol::table t, int memory_address, int len) 
         throw "length must be greater than 0";
     }
     if (len >= 8192) {
-        len = 8192 - 1;
+        len = 8191;
     }
 
     try { psolualib_read_mem_SEH(memory_address, len, buf); }
@@ -321,7 +313,7 @@ static char *psolualib_read_mem_str_SEH(int memory_address, int len, char *buf)
 static std::string psolualib_read_mem_str(int memory_address, int len) {
     char buf[8192] = { 0 };
     if (len >= 8192) {
-        len = 8192;
+        len = 8191;
     }
 
     try { psolualib_read_mem_str_SEH(memory_address, len, buf); }
