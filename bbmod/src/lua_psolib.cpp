@@ -306,6 +306,7 @@ static sol::table psolualib_list_addons() {
         if (filename == "..") continue;
         if (filename == ".") continue;
         if (filename == "fonts") continue;
+        if (filename == "customdlls") continue;
         if (find.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
             ret.add(filename);
         }

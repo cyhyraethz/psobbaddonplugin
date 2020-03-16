@@ -28,6 +28,7 @@
 #define PSOBB_HWND_PTR (HWND*)(0x00ACBED8 - 0x00400000 + g_PSOBaseAddress)
 
 #define DO_HOOKS true
+#define D3D8_DLL_CHAINING_SUPPORT 0
 
 typedef HRESULT(WINAPI *tDirectInput8Create)(HINSTANCE inst_handle, DWORD version, const IID& r_iid, LPVOID* out_wrapper, LPUNKNOWN p_unk);
 tDirectInput8Create oDirectInput8Create = nullptr;
@@ -86,15 +87,61 @@ void Initialize() {
         CHAR syspath[MAX_PATH];
         GetSystemDirectory(syspath, MAX_PATH);
         strcat_s(syspath, "\\dinput8.dll");
-        HMODULE hMod = LoadLibrary(syspath);
-        oDirectInput8Create = (tDirectInput8Create)GetProcAddress(hMod, "DirectInput8Create");
+
+        CHAR dllpath[MAX_PATH];
+        GetCurrentDirectory(MAX_PATH, dllpath);
+        strcat_s(dllpath, "\\addons\\customdlls\\dinput8.dll");
+
+        DWORD dwAttrs;
+        dwAttrs = GetFileAttributes(dllpath);
+
+        HMODULE hMod = NULL;
+        if (dwAttrs != INVALID_FILE_ATTRIBUTES)
+        {
+            hMod = LoadLibrary(dllpath);
+            if (hMod)
+                oDirectInput8Create = (tDirectInput8Create)GetProcAddress(hMod, "DirectInput8Create");
+        }
+
+        // If no customdlls or if the LoadLibrary() failed or GetProcAddress() failed
+        if (!hMod || !oDirectInput8Create)
+        {
+            hMod = LoadLibrary(syspath);
+            oDirectInput8Create = (tDirectInput8Create)GetProcAddress(hMod, "DirectInput8Create");
+        }
     }
+
     if (!oDirect3DCreate8) {
         CHAR syspath[MAX_PATH];
         GetSystemDirectory(syspath, MAX_PATH);
         strcat_s(syspath, "\\d3d8.dll");
+
+#if D3D8_DLL_CHAINING_SUPPORT
+        CHAR dllpath[MAX_PATH];
+        GetCurrentDirectory(MAX_PATH, dllpath);
+        strcat_s(dllpath, "\\addons\\customdlls\\d3d8.dll");
+
+        DWORD dwAttrs;
+        dwAttrs = GetFileAttributes(dllpath);
+
+        HMODULE hMod = NULL;
+        if (dwAttrs != INVALID_FILE_ATTRIBUTES)
+        {
+            hMod = LoadLibrary(dllpath);
+            if (hMod)
+                oDirect3DCreate8 = (tDirect3DCreate8)GetProcAddress(hMod, "Direct3DCreate8");
+        }
+
+        // If no customdlls or if the LoadLibrary() failed or GetProcAddress() failed
+        if (!hMod || !oDirect3DCreate8)
+        {
+            hMod = LoadLibrary(syspath);
+            oDirect3DCreate8 = (tDirect3DCreate8)GetProcAddress(hMod, "Direct3DCreate8");
+        }
+#else
         HMODULE hMod = LoadLibrary(syspath);
         oDirect3DCreate8 = (tDirect3DCreate8)GetProcAddress(hMod, "Direct3DCreate8");
+#endif
     }
 
     FPUSTATE fpustate;
