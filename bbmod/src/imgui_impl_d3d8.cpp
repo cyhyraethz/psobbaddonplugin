@@ -15,6 +15,7 @@
 #include "util.h"
 #include "luastate.h"
 #include "shlwapi.h"
+#include "lua_hooks.h"
 
 
 static HWND g_hWnd;
@@ -570,6 +571,7 @@ void ImGui_ImplD3D8_NewFrame(void) {
 // Change the font if necessary... Really need to clean up how the arguments are passed through globals
 void ImGui_BetweenFrameChanges(void) {
     ImGuiIO& io = ImGui::GetIO();
+    bool fontLoadFailed = false;
 
     if (g_NewFontSpecified) {
         // Clear flag so we try this once until user makes another change
@@ -609,7 +611,7 @@ void ImGui_BetweenFrameChanges(void) {
                 ImFont *ptmp;
                 // Load the font, if we are merging fonts then load only default glyph range
                 ptmp = io.Fonts->AddFontFromFileTTF(g_NewFontName, g_NewFontSize, &font_cfg,
-                                    g_MergeFonts ? io.Fonts->GetGlyphRangesDefault() : io.Fonts->GetGlyphRangesChinese());
+                                                    g_MergeFonts ? io.Fonts->GetGlyphRangesDefault() : io.Fonts->GetGlyphRangesChinese());
                 if (ptmp) {
                     // Font was loaded successfully, save the info about it.
                     g_LoadedFont = ptmp;
@@ -629,6 +631,8 @@ void ImGui_BetweenFrameChanges(void) {
                             font_cfg.SizePixels = g_NewFontSize2;
                             font_cfg.MergeMode = true;
 
+                            // Load this secondary font for the Chinese glyph range. We do not care
+                            // too much if this fails because we successfully loaded the primary font.
                             ptmp = io.Fonts->AddFontFromFileTTF(g_NewFontName2, g_NewFontSize2, &font_cfg, io.Fonts->GetGlyphRangesChinese());
                             if (ptmp) {
                                 // Loaded successfully
@@ -637,12 +641,21 @@ void ImGui_BetweenFrameChanges(void) {
                                 strncpy(g_LoadedFontName2, g_NewFontName2, MAX_PATH);
                                 g_LoadedFontMergeMode = true;
                             }
+                            else {
+                                std::string errorMessage = "Failed to load the secondary font: " + std::string(g_NewFontName2) + "\n";
+                                psoluah_Log(errorMessage);
+                            }
                         }
                         else {
+                            // Failed to load the merged font. Not a big problem.
                             g_LoadedFontMergeMode = false;
                             snprintf(g_LoadedFontName2, MAX_PATH, "");
                             g_LoadedFontSize2 = 13;
                             g_LoadedFont2 = NULL;
+
+                            std::string errorMessage = "Invalid secondary font file " + std::string(g_NewFontName2) +
+                                                       " specified.\n";
+                            psoluah_Log(errorMessage);
                         }
                     }
                     else {
@@ -652,21 +665,39 @@ void ImGui_BetweenFrameChanges(void) {
                         g_LoadedFont2 = NULL;
                     }
 
-
                     ImGui_ImplDX9_CreateFontsTexture();
+                }
+                else {
+                    std::string errorMessage = "Failed to load the primary font " + std::string(g_NewFontName) +
+                                               ". Restoring default font.\n";
+                    psoluah_Log(errorMessage);
+
+                    // Failed to load the primary font. Remember this so that we restore
+                    // the default font.
+                    fontLoadFailed = true;
                 }
             }
             else {
-                // Failed to load, we also cleared the current font above and we may be able to
-                // restore it, but we'll leave it up to addon to provide correct file.
-                snprintf(g_LoadedFontName, MAX_PATH, "");
-                g_LoadedFontSize = 13; 
-                g_LoadedFont = NULL;
+                std::string errorMessage = "Failed to open the primary font file " + std::string(g_NewFontName) +
+                                           ". Does this file exist on disk? Restoring default font.\n";
+                psoluah_Log(errorMessage);
 
-                // Setup the default font so that we can keep the client running
-                io.Fonts->AddFontDefault();
-                ImGui_ImplDX9_CreateFontsTexture(); 
+                // The font file cannot even be opened. Somehow the Settings Editor
+                // provided a bad file name?
+                fontLoadFailed = true;
             }
         }
+    }
+
+    if (fontLoadFailed) {
+        // Failed to load, we also cleared the current font above and we may be able to
+        // restore it, but we'll leave it up to addon to provide correct file.
+        snprintf(g_LoadedFontName, MAX_PATH, "");
+        g_LoadedFontSize = 13;
+        g_LoadedFont = NULL;
+
+        // Setup the default font so that we can keep the client running with readable text.
+        io.Fonts->AddFontDefault();
+        ImGui_ImplDX9_CreateFontsTexture();
     }
 }
