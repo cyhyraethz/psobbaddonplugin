@@ -3,14 +3,6 @@
 #include "imgui/imgui.h"
 #include "log.h"
 
-static GUID sysKeyboardGuid = {
-    1864182625, 54688, 4559, { 191, 199, 68, 69, 83, 84, 0, 0 }
-};
-
-static GUID sysMouseGuid = {
-    1864182624, 54688, 4559, { 191, 199, 68, 69, 83, 84, 0, 0 }
-};
-
 STDMETHODIMP ImguiDInput::QueryInterface(REFIID riid, LPVOID * ppvObj)
 {
     return inner->QueryInterface(riid, ppvObj);
@@ -29,10 +21,10 @@ STDMETHODIMP_(ULONG) ImguiDInput::Release(void)
 STDMETHODIMP ImguiDInput::CreateDevice(REFGUID guid, LPDIRECTINPUTDEVICE8A * devptr, LPUNKNOWN unk)
 {
     auto ret = inner->CreateDevice(guid, devptr, unk);
-    if (guid == sysKeyboardGuid) {
+    if (guid == GUID_SysKeyboard) {
         *devptr = (LPDIRECTINPUTDEVICE8A) new ImguiDInputDevice(*devptr, true);
     }
-    if (guid == sysMouseGuid) {
+    if (guid == GUID_SysMouse) {
         *devptr = (LPDIRECTINPUTDEVICE8A) new ImguiDInputDevice(*devptr, false);
     }
     return ret;
