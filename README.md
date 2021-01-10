@@ -5,8 +5,8 @@
 A plugin for Phantasy Star Online Blue Burst that enables graphical UI addons,
 which can read the game's memory and present additional useful information.
 
-- [Wiki](https://github.com/HybridEidolon/psobbaddonplugin/wiki)
-- [Releases](https://github.com/HybridEidolon/psobbaddonplugin/releases)
+- [Wiki](/../../wiki)
+- [Releases](/../../releases)
 
 ## Installation
 
