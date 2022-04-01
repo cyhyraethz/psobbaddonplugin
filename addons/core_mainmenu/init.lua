@@ -8,7 +8,7 @@ local hooked_buttons = {}
 local add_button
 local remove_button
 
-local window_open = true
+local window_open = false
 
 local exit_game_window = false
 
